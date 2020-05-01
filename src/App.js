@@ -1,9 +1,15 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { Header } from "./components/header/header.component";
+import "./App.scss";
+import { Footer } from "./components/footer/footer.component";
 
 export function App() {
-  return <div></div>;
+  return (
+    <div>
+      <Header />
+      <Footer />
+    </div>
+  );
 }
 
 export default App;
