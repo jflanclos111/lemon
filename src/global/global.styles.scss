@@ -1,0 +1,24 @@
+$primary-text-color: rgb(241, 238, 190);
+$primary-font-family: "Spartan", sans-serif;
+$primary-font-weight: 400;
+$primary-font-size: 1rem;
+$surround-padding: 0.2rem;
+$hover-text-color: rgb(159, 204, 117);
+$text-animation-duration: 0.5s;
+
+@mixin primary-text-base-styling($clickable: false) {
+  font-family: $primary-font-family;
+  font-weight: $primary-font-weight;
+  font-size: $primary-font-size;
+  color: $primary-text-color;
+  transition: color $text-animation-duration ease;
+  height: $primary-font-size + $surround-padding * 2;
+
+  &:hover {
+    @if $clickable {
+      cursor: pointer;
+      color: $hover-text-color;
+      transition: color $text-animation-duration ease;
+    }
+  }
+}

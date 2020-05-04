@@ -1,17 +1,14 @@
+@import "../../global/global.styles.scss";
+
 .footer {
-  position: absolute;
   text-align: center;
   background-color: #5c5f49;
   background-image: url("https://www.transparenttextures.com/patterns/dark-stripes-light.png");
   /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
   box-shadow: 0 0px 10px rgb(63, 63, 63);
-  width: 100%;
-  bottom: 0;
 
   .footer-text {
-    font-family: "Spartan", sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-    color: rgb(241, 238, 190);
+    @include primary-text-base-styling;
+    padding: 5px 0px 5px 0px;
   }
 }

@@ -1,5 +1,35 @@
+@import "./global/global.styles.scss";
+
+html,
 body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   background-color: #7d8164;
   background-image: url("https://www.transparenttextures.com/patterns/dark-stripes-light.png");
   /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+}
+
+.bodytext {
+  @include primary-text-base-styling;
+}
+
+.grid-container {
+  display: grid;
+  height: 100vh;
+  width: 100ww;
+  grid-template-rows: 1fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+.grid-header {
+}
+
+.grid-body {
+  display: grid;
+  overflow: auto;
+  overflow-y: auto;
+}
+
+.grid-footer {
 }
