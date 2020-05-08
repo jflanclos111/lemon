@@ -1,0 +1,17 @@
+button {
+  box-sizing: border-box;
+  border: none;
+  text-align: center;
+
+  height: 100%;
+  margin: 5px;
+
+  &:active {
+    outline: none;
+    border: none;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+}

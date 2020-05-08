@@ -2,34 +2,26 @@
 
 html,
 body {
-  width: 100vw;
-  height: 100vh;
   overflow: hidden;
-  background-color: #7d8164;
-  background-image: url("https://www.transparenttextures.com/patterns/dark-stripes-light.png");
-  /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
-}
-
-.bodytext {
-  @include primary-text-base-styling;
+  @include backdrop-styling("primary");
 }
 
 .grid-container {
   display: grid;
   height: 100vh;
-  width: 100ww;
-  grid-template-rows: 1fr;
-  grid-template-rows: auto 1fr auto;
+  width: 100vw;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 5fr auto;
 }
 
 .grid-header {
 }
 
 .grid-body {
-  display: grid;
-  overflow: auto;
-  overflow-y: auto;
-}
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-.grid-footer {
+  // overflow: auto;
+  // overflow-y: auto;
 }

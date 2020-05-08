@@ -1,0 +1,41 @@
+@import "../../../global/global.styles.scss";
+
+.styled-bar {
+  @include backdrop-styling($variation: "secondary");
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-content: center;
+  width: 100vw;
+  height: 40px;
+  transition: height 1s ease;
+  &:hover {
+    height: 50px;
+  }
+
+  .left-layout-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 5px;
+  }
+
+  .center-layout-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+  }
+
+  .right-layout-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 5px;
+  }
+
+  .text {
+    @include text-styling($clickable: true);
+    display: inline;
+  }
+}
