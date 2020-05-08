@@ -1,5 +1,5 @@
 $primary-text-color: rgb(31, 83, 62);
-$hover-text-color: #14c288;
+$hover-text-color: #000000;
 $default-background-color: #000000;
 $primary-background-color: #006d55;
 $secondary-background-color: #14c288;
@@ -19,7 +19,7 @@ $background-texture: url("https://www.transparenttextures.com/patterns/dark-stri
                                     supported by Chrome, Opera and Firefox */
 }
 
-@mixin text-styling($clickable: false) {
+@mixin text-styling($clickable: false, $size: $primary-font-size) {
   @include noselect;
   font-family: $primary-font-family;
   font-weight: $primary-font-weight;
@@ -42,7 +42,7 @@ $background-texture: url("https://www.transparenttextures.com/patterns/dark-stri
   $custom-color: $default-background-color,
   $custom-texture: $background-texture
 ) {
-  @if $variation== "primary" {
+  @if $variation == "primary" {
     background-color: $primary-background-color;
   } @else if $variation == "secondary" {
     background-color: $secondary-background-color;

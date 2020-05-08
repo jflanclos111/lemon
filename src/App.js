@@ -4,17 +4,19 @@ import { StyledBar } from "./components/page/styled-bar/styled-bar.component";
 import { ReactComponent as IdeaWorks } from "./assets/ideaworks.svg";
 import { Button } from "./components/base/button/button.component";
 import { ReactComponent as Lemon } from "./assets/vector.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTh } from "@fortawesome/free-solid-svg-icons";
 
 export function App() {
   const LeftGroup = () => (
-    <div>
-      <p className="text">Left Container</p>
+    <div className="svg-wrapper">
+      <FontAwesomeIcon className="svg text" icon={faTh} />
     </div>
   );
 
   const RightGroup = () => (
-    <div>
-      <p className="text">Right Container</p>
+    <div className="svg-wrapper">
+      <FontAwesomeIcon className="svg text" icon={faTh} />
     </div>
   );
 

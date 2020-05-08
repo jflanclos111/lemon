@@ -3,7 +3,7 @@
 html,
 body {
   overflow: hidden;
-  @include backdrop-styling("primary");
+  @include backdrop-styling($variation: "primary");
 }
 
 .grid-container {
@@ -14,14 +14,8 @@ body {
   grid-template-rows: auto 5fr auto;
 }
 
-.grid-header {
-}
-
 .grid-body {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  // overflow: auto;
-  // overflow-y: auto;
 }

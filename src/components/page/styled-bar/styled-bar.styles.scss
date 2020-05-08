@@ -1,22 +1,26 @@
 @import "../../../global/global.styles.scss";
 
+$min-height: 80px;
+$max-height: $min-height + 5px;
+
 .styled-bar {
   @include backdrop-styling($variation: "secondary");
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
   align-content: center;
+  align-items: stretch;
   width: 100vw;
-  height: 40px;
+  height: $min-height;
   transition: height 1s ease;
   &:hover {
-    height: 50px;
+    height: $max-height;
   }
 
   .left-layout-container {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: stretch;
     margin: 5px;
   }
 
@@ -30,12 +34,22 @@
   .right-layout-container {
     display: flex;
     justify-content: flex-end;
-    align-items: center;
+    align-items: stretch;
+    flex-wrap: nowrap;
     margin: 5px;
   }
 
   .text {
     @include text-styling($clickable: true);
     display: inline;
+  }
+
+  .svg-wrapper {
+    width: $max-height;
+  }
+
+  .svg {
+    height: 100%;
+    width: 100%;
   }
 }
