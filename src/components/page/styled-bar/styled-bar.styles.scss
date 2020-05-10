@@ -2,6 +2,8 @@
 
 $min-height: 30px;
 $max-height: $min-height + 5px;
+$transition-speed: 0.25s;
+$transition-type: ease;
 
 @mixin bar-group($alignment: "center") {
   display: flex;
@@ -17,7 +19,7 @@ $max-height: $min-height + 5px;
   }
 }
 
-@mixin bar-item {
+@mixin bar-item($hovered: false) {
   div > svg {
     height: 100%;
     width: 100%;
@@ -25,36 +27,47 @@ $max-height: $min-height + 5px;
   }
 
   div {
-    width: $max-height;
+    transition: width $transition-speed $transition-type;
+    @if $hovered == true {
+      width: $max-height;
+      // background-color: blue;
+    } @else {
+      width: $min-height;
+      // background-color: white;
+    }
+  }
+}
+
+@mixin group-style($bar-hovered: false) {
+  .left-layout-container {
+    @include bar-group($alignment: "left");
+    @include bar-item($hovered: $bar-hovered);
+  }
+
+  .center-layout-container {
+    @include bar-group($alignment: "center");
+    @include bar-item($hovered: $bar-hovered);
+  }
+
+  .right-layout-container {
+    @include bar-group($alignment: "right");
+    @include bar-item($hovered: $bar-hovered);
   }
 }
 
 .styled-bar {
   @include backdrop-styling($variation: "secondary");
+  width: 100vw;
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
   align-content: center;
   align-items: stretch;
-  width: 100vw;
   height: $min-height;
-  transition: height 0.5s ease;
+  transition: height $transition-speed $transition-type;
+  @include group-style($bar-hovered: false);
   &:hover {
     height: $max-height;
-  }
-
-  .left-layout-container {
-    @include bar-group($alignment: "left");
-    @include bar-item();
-  }
-
-  .center-layout-container {
-    @include bar-group($alignment: "center");
-    @include bar-item();
-  }
-
-  .right-layout-container {
-    @include bar-group($alignment: "right");
-    @include bar-item();
+    @include group-style($bar-hovered: true);
   }
 }

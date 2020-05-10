@@ -26,15 +26,7 @@ export function Navbar() {
     </Fragment>
   );
 
-  const CenterGroup = () => (
-    <Fragment>
-      <SVGWrap svg={<FontAwesomeIcon icon={faTh} />}></SVGWrap>
-      <SVGWrap svg={<FontAwesomeIcon icon={faTh} />}></SVGWrap>
-      <SVGWrap svg={<FontAwesomeIcon icon={faTh} />}></SVGWrap>
-      <SVGWrap svg={<FontAwesomeIcon icon={faTh} />}></SVGWrap>
-      <SVGWrap svg={<FontAwesomeIcon icon={faTh} />}></SVGWrap>
-    </Fragment>
-  );
+  const CenterGroup = () => <Fragment></Fragment>;
 
   return (
     <StyledBar
