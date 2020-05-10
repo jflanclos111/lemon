@@ -1,7 +1,33 @@
 @import "../../../global/global.styles.scss";
 
-$min-height: 80px;
+$min-height: 30px;
 $max-height: $min-height + 5px;
+
+@mixin bar-group($alignment: "center") {
+  display: flex;
+  align-items: stretch;
+  margin: 5px;
+
+  @if $alignment == "left" {
+    justify-content: flex-start;
+  } @else if $alignment == "right" {
+    justify-content: flex-end;
+  } @else {
+    justify-content: center;
+  }
+}
+
+@mixin bar-item {
+  div > svg {
+    height: 100%;
+    width: 100%;
+    @include text-styling($clickable: true);
+  }
+
+  div {
+    width: $max-height;
+  }
+}
 
 .styled-bar {
   @include backdrop-styling($variation: "secondary");
@@ -12,44 +38,23 @@ $max-height: $min-height + 5px;
   align-items: stretch;
   width: 100vw;
   height: $min-height;
-  transition: height 1s ease;
+  transition: height 0.5s ease;
   &:hover {
     height: $max-height;
   }
 
   .left-layout-container {
-    display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
-    margin: 5px;
+    @include bar-group($alignment: "left");
+    @include bar-item();
   }
 
   .center-layout-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 5px;
+    @include bar-group($alignment: "center");
+    @include bar-item();
   }
 
   .right-layout-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: stretch;
-    flex-wrap: nowrap;
-    margin: 5px;
-  }
-
-  .text {
-    @include text-styling($clickable: true);
-    display: inline;
-  }
-
-  .svg-wrapper {
-    width: $max-height;
-  }
-
-  .svg {
-    height: 100%;
-    width: 100%;
+    @include bar-group($alignment: "right");
+    @include bar-item();
   }
 }
