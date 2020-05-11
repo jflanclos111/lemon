@@ -8,7 +8,6 @@ export function App() {
     <div className="grid-container">
       <Navbar />
       <Content />
-      <Navbar />
     </div>
   );
 }

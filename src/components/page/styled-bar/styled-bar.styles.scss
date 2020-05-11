@@ -1,15 +1,42 @@
 @import "../../../global/global.styles.scss";
 
-$min-height: 30px;
-$max-height: $min-height + 5px;
+$min-height: 25px;
+$max-height: $min-height + 20px;
 $transition-speed: 0.25s;
 $transition-type: ease;
 
-@mixin bar-group($alignment: "center") {
-  display: flex;
-  align-items: stretch;
-  margin: 5px;
+@mixin bar-item() {
+  padding: 5px 0px;
+  width: 100%;
 
+  p {
+    @include text-styling($clickable: true);
+    flex: 8 0 0px;
+    padding: 0px 8px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // background-color: lightcoral;
+  }
+
+  svg {
+    @include text-styling($clickable: true);
+    flex: 1 0 0px;
+    height: 100%;
+    padding: 0px 5px;
+    // background-color: white;
+  }
+}
+
+@mixin bar-group($alignment: "center") {
+  @include bar-item();
+  display: flex;
+  margin: 1px;
+  // width: 33%;
+
+  align-items: center;
+  white-space: nowrap;
+  // background-color: khaki;
   @if $alignment == "left" {
     justify-content: flex-start;
   } @else if $alignment == "right" {
@@ -19,55 +46,36 @@ $transition-type: ease;
   }
 }
 
-@mixin bar-item($hovered: false) {
-  div > svg {
-    height: 100%;
-    width: 100%;
-    @include text-styling($clickable: true);
-  }
-
-  div {
-    transition: width $transition-speed $transition-type;
-    @if $hovered == true {
-      width: $max-height;
-      // background-color: blue;
-    } @else {
-      width: $min-height;
-      // background-color: white;
-    }
-  }
-}
-
-@mixin group-style($bar-hovered: false) {
+@mixin group-style() {
   .left-layout-container {
     @include bar-group($alignment: "left");
-    @include bar-item($hovered: $bar-hovered);
+    flex: 1 0 0px;
   }
 
   .center-layout-container {
     @include bar-group($alignment: "center");
-    @include bar-item($hovered: $bar-hovered);
+    flex: 2 0 0px;
   }
 
   .right-layout-container {
     @include bar-group($alignment: "right");
-    @include bar-item($hovered: $bar-hovered);
+    flex: 3 0 0px;
   }
 }
 
 .styled-bar {
   @include backdrop-styling($variation: "secondary");
-  width: 100vw;
+  @include group-style();
   display: flex;
+  width: 100vw;
+  height: $min-height;
   flex-wrap: nowrap;
   justify-content: space-between;
   align-content: center;
   align-items: stretch;
-  height: $min-height;
   transition: height $transition-speed $transition-type;
-  @include group-style($bar-hovered: false);
+
   &:hover {
     height: $max-height;
-    @include group-style($bar-hovered: true);
   }
 }
