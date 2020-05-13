@@ -4,7 +4,7 @@ $default-background-color: #000000;
 $primary-background-color: #006d55;
 $secondary-background-color: #14c288;
 $primary-font-family: "Oxygen", sans-serif;
-$primary-font-weight: 400;
+$primary-font-weight: 600;
 $primary-font-size: 1rem;
 $text-animation-duration: 0.5s;
 $background-texture: url("https://www.transparenttextures.com/patterns/dark-stripes-light.png");
@@ -36,6 +36,7 @@ $background-texture: url("https://www.transparenttextures.com/patterns/dark-stri
   }
 }
 
+//BUG: Secondary variation does not work with texture = true
 @mixin backdrop-styling(
   $variation: "primary",
   $textured: false,
@@ -60,6 +61,3 @@ $background-texture: url("https://www.transparenttextures.com/patterns/dark-stri
     background-image: none;
   }
 }
-
-// $primary-background-color: #006d55;
-// $secondary-background-color: #14c288;
