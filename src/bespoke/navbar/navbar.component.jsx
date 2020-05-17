@@ -1,6 +1,4 @@
 import React, { Fragment } from "react";
-import uuid from "react-uuid";
-import "./navbar.styles.scss";
 import { StyledBar } from "../../components/page/styled-bar/styled-bar.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,27 +11,27 @@ import {
 export function Navbar() {
   const LeftGroup = () => (
     <Fragment>
-      <FontAwesomeIcon key={uuid()} icon={faBars} />
+      <FontAwesomeIcon icon={faBars} />
     </Fragment>
   );
   const CenterGroup = () => (
     <Fragment>
-      <p key={uuid()}>Lemon</p>
+      <p>Lemon</p>
     </Fragment>
   );
   const RightGroup = () => (
     <Fragment>
-      <FontAwesomeIcon key={uuid()} icon={faCog} />
-      <FontAwesomeIcon key={uuid()} icon={faSearch} />
-      <FontAwesomeIcon key={uuid()} icon={faQuestion} />
+      <FontAwesomeIcon icon={faCog} />
+      <FontAwesomeIcon icon={faSearch} />
+      <FontAwesomeIcon icon={faQuestion} />
     </Fragment>
   );
 
   return (
     <StyledBar
-      leftGroup={<LeftGroup key={uuid()} />}
-      centerGroup={<CenterGroup key={uuid()} />}
-      rightGroup={<RightGroup key={uuid()} />}
+      leftGroup={<LeftGroup />}
+      centerGroup={<CenterGroup />}
+      rightGroup={<RightGroup />}
     />
   );
 }
