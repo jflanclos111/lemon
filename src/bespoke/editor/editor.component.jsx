@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import "./editor.styles.scss";
-import { Portal } from "./classes/Portal";
+import { Portal } from "./scripts/Portal";
 import { useState } from "react";
 
 const paper = new Portal();

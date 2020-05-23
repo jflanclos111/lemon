@@ -1,7 +1,9 @@
-import { Points } from "./Points";
-import { Basic } from "./Basic";
+import * as point from "./point.ts";
+import * as basic from "./basic.ts";
 
 export class Portal {
+  canvas;
+
   constructor() {
     this.canvas = null;
     this.ctx = null;
@@ -9,8 +11,8 @@ export class Portal {
     this.scaleDeltaCoarse = 0.01;
     this.scaleDeltaFine = 0.01;
     this.scaleMin = 0.1;
-    this.scaleMax = 15.0;
-    this.MouseLocation = new Points(0, 0);
+    this.scaleMax = 2.0;
+    this.MouseLocation = point.createPoint(0, 0);
   }
 
   //Canvas Initialization
@@ -65,18 +67,16 @@ export class Portal {
     const delta = event.wheelDelta;
     const increment = Math.sign(delta) * this.scaleDeltaCoarse;
 
-    this.scaleTarget = Basic.boundaryIncrement(
-      this.scaleTarget,
-      increment,
-      this.scaleMin,
-      this.scaleMax
+    this.scaleTarget = basic.setPrecision(
+      basic.clamp(this.scaleTarget, increment, this.scaleMin, this.scaleMax),
+      2
     );
 
     this.render();
   }
 
   handleMouseMove(event) {
-    this.MouseLocation = Points.createPoint(
+    this.MouseLocation.setXY(
       event.x - this.ctx.canvas.offsetLeft,
       event.y - this.ctx.canvas.offsetTop
     );
