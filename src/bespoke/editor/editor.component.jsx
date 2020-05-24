@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import "./editor.styles.scss";
-import { Portal } from "./scripts/Portal";
+import * as workspace from "./scripts/workspace";
 import { useState } from "react";
 
-const paper = new Portal();
+let canvasView = null;
 
 export function Editor() {
   const firstUpdate = useRef(true);
@@ -31,10 +31,10 @@ export function Editor() {
     window.addEventListener("resize", windowResize);
     if (firstUpdate.current) {
       windowResize();
-      paper.create(canvasRef.current);
+      canvasView = new workspace.Workspace(canvasRef.current);
       firstUpdate.current = false;
     } else {
-      paper.render();
+      canvasView.render();
     }
 
     return () => {
