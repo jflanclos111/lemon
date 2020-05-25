@@ -81,9 +81,6 @@ export class Workspace {
     const configParameters = this.configParameters;
     const mouseState = this.mouseState;
     mouseState.update(state, event);
-    // console.log(
-    //   spatialOps.worldToScreen(state.scale, mouseState.getWorldPosition(Moment.Current), state.worldPosition)
-    // );
     state.scale = spatialOps.getNewScale(state, configParameters, mouseState);
     state.worldPosition = spatialOps.getNewWorldPosition(state, mouseState);
     this.render();
@@ -149,9 +146,5 @@ export class Workspace {
     ctx.fillRect(this.state.worldPosition.getX(), this.state.worldPosition.getY(), 800, 800);
     ctx.fillStyle = "#000000";
     ctx.fillText("World (0,0)", this.state.worldPosition.getX(), this.state.worldPosition.getY());
-    // ctx.fillStyle = "#FF0000";
-    // ctx.fillRect(0, 0, 50, 50);
-    // ctx.fillStyle = "#000000";
-    // ctx.fillRect(100, 34, 50, 50);
   }
 }

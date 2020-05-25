@@ -14,6 +14,13 @@ export enum ScrollDirection {
   Out,
 }
 
+enum MouseButton {
+  None = 0,
+  Primary = 1,
+  Auxiliary = 4,
+  Secondary = 2,
+}
+
 interface ChronologicalPoint {
   current: Point;
   last: Point;
@@ -182,11 +189,17 @@ export class Mouse {
     this.setScreenPosition(workspaceState, mouseEvent);
     this.setWorldPosition(workspaceState, mouseEvent);
     if (mouseEvent.type === "mousedown") {
-      primaryButton.setState(mouseEvent.buttons === 1 ? true : false);
-      auxiliaryButton.setState(mouseEvent.buttons === 4 ? true : false);
-      secondaryButton.setState(mouseEvent.buttons === 2 ? true : false);
-      drag.setState(mouseEvent.buttons === 1 || mouseEvent.buttons === 4 || mouseEvent.buttons === 2 ? true : false);
-    } else if (mouseEvent.type !== "mousedown" && mouseEvent.buttons === 0) {
+      primaryButton.setState(mouseEvent.buttons === MouseButton.Primary ? true : false);
+      auxiliaryButton.setState(mouseEvent.buttons === MouseButton.Auxiliary ? true : false);
+      secondaryButton.setState(mouseEvent.buttons === MouseButton.Secondary ? true : false);
+      drag.setState(
+        mouseEvent.buttons === MouseButton.Primary ||
+          mouseEvent.buttons === MouseButton.Auxiliary ||
+          mouseEvent.buttons === MouseButton.Secondary
+          ? true
+          : false
+      );
+    } else if (mouseEvent.type !== "mousedown" && mouseEvent.buttons === MouseButton.None) {
       primaryButton.setState(false);
       auxiliaryButton.setState(false);
       secondaryButton.setState(false);

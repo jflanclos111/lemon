@@ -27,9 +27,9 @@ export function getNewScale(
   const scaleIncrement = canvasConfig.scaleDeltaCoarse;
   let increment = 0;
   let newScale = currentScale;
-  if (mouseState.getStateScrollIn(Moment.Current) === true) {
+  if (mouseState.getStateScrollIn(Moment.Current)) {
     increment = scaleIncrement;
-  } else if (mouseState.getStateScrollOut(Moment.Current) === true) {
+  } else if (mouseState.getStateScrollOut(Moment.Current)) {
     increment = -scaleIncrement;
   }
   newScale = basic.setPrecision(basic.clamp(newScale, increment, scaleMin, scaleMax), 2);
@@ -45,10 +45,9 @@ export function getNewWorldPosition(canvasState: WorkspaceState, mouseState: Mou
   const mouseWorldPositionCurrent = mouseState.getWorldPosition(Moment.Current);
 
   if (
-    (mouseState.getStateDragging(Moment.Current) === true &&
-      mouseState.getButtonStateAuxiliary(Moment.Current) === true) ||
-    mouseState.getStateScrollIn(Moment.Current) === true ||
-    mouseState.getStateScrollOut(Moment.Current) === true
+    (mouseState.getStateDragging(Moment.Current) && mouseState.getButtonStateAuxiliary(Moment.Current)) ||
+    mouseState.getStateScrollIn(Moment.Current) ||
+    mouseState.getStateScrollOut(Moment.Current)
   ) {
     const dxPan = point.deltaX(mouseScreenPositionCurrent, mouseScreenPositionLast);
     const dyPan = point.deltaY(mouseScreenPositionCurrent, mouseScreenPositionLast);
