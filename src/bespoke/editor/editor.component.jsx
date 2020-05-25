@@ -29,6 +29,7 @@ export function Editor() {
 
   useEffect(() => {
     window.addEventListener("resize", windowResize);
+    window.addEventListener("contextmenu", (event) => event.preventDefault());
     if (firstUpdate.current) {
       windowResize();
       canvasView = new workspace.Workspace(canvasRef.current);
@@ -39,16 +40,13 @@ export function Editor() {
 
     return () => {
       window.removeEventListener("resize", windowResize);
+      window.addEventListener("contextmenu", (event) => event.preventDefault());
     };
   });
 
   return (
     <div ref={editorRef} className="editor">
-      <canvas
-        ref={canvasRef}
-        width={state.editorProps.viewWidth}
-        height={state.editorProps.viewHeight}
-      ></canvas>
+      <canvas ref={canvasRef} width={state.editorProps.viewWidth} height={state.editorProps.viewHeight}></canvas>
     </div>
   );
 }

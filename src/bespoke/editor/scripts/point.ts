@@ -105,3 +105,18 @@ export function offsetPoint(a: Point, offsetX: number, offsetY: number) {
   const newY = a.getY() + offsetY;
   return new Point(newX, newY);
 }
+
+//returns a Point that is the result of multiplying the "x" and "y" coordinates of Point "a" by the specified "factor"
+export function multiplyPoint(a: Point, factor: number) {
+  const newX = a.getX() * factor;
+  const newY = a.getY() * factor;
+  return new Point(newX, newY);
+}
+
+//returns a Point that is the result of dividing the "x" and "y" coordinates of Point "a" by the specified "divisor"
+export function dividePoint(a: Point, divisor: number) {
+  if (divisor === 0) return new Point(Infinity, Infinity);
+  const newX = a.getX() / divisor;
+  const newY = a.getY() / divisor;
+  return new Point(newX, newY);
+}

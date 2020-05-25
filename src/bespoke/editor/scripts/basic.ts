@@ -1,10 +1,5 @@
 //takes in a variable and returns the variable incremented by the amount "incrment" within the lower bound "lowerBound" and the upper bound "upperBound"
-export function clamp(
-  variable: any,
-  increment: number,
-  lowerBound: number,
-  upperBound: number
-): number {
+export function clamp(variable: number, increment: number, lowerBound: number, upperBound: number): number {
   const newVar = variable + increment;
   return newVar < lowerBound || newVar > upperBound ? variable : newVar;
 }
