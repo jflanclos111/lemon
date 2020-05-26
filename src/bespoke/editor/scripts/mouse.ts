@@ -1,7 +1,6 @@
 import { Point } from "./point";
 import { WorkspaceState } from "./workspace";
 import * as spatialOps from "./spatial-ops";
-import { Dir } from "fs";
 
 export enum Moment {
   Current,
@@ -84,8 +83,8 @@ export class Mouse {
   public getScreenPosition(which: Moment = Moment.Current): Point {
     const positionScreen = this.positionScreen;
     return new Point(
-      which === Moment.Current ? positionScreen.current.getX() : positionScreen.last.getX(),
-      which === Moment.Current ? positionScreen.current.getY() : positionScreen.last.getY()
+      which === Moment.Current ? positionScreen.current.x : positionScreen.last.x,
+      which === Moment.Current ? positionScreen.current.y : positionScreen.last.y
     );
   }
 
@@ -93,7 +92,7 @@ export class Mouse {
     const canvas = workspaceState.ctx.canvas;
     const positionScreen = this.positionScreen;
     if (positionScreen.last !== positionScreen.current) {
-      positionScreen.last.setXY(positionScreen.current.getX(), positionScreen.current.getY());
+      positionScreen.last.setXY(positionScreen.current.x, positionScreen.current.y);
       positionScreen.current.setXY(mouseEvent.x - canvas.offsetLeft, mouseEvent.y - canvas.offsetTop);
     }
     return;
@@ -103,8 +102,8 @@ export class Mouse {
   public getWorldPosition(which: Moment = Moment.Current): Point {
     const positionWorld = this.positionWorld;
     return new Point(
-      which === Moment.Current ? positionWorld.current.getX() : positionWorld.last.getX(),
-      which === Moment.Current ? positionWorld.current.getY() : positionWorld.last.getY()
+      which === Moment.Current ? positionWorld.current.x : positionWorld.last.x,
+      which === Moment.Current ? positionWorld.current.y : positionWorld.last.y
     );
   }
 
@@ -119,8 +118,8 @@ export class Mouse {
       workspaceState.worldPosition
     );
     if (positionWorld.last !== positionWorld.current) {
-      positionWorld.last.setXY(positionWorld.current.getX(), positionWorld.current.getY());
-      positionWorld.current.setXY(transformedWorldPosition.getX(), transformedWorldPosition.getY());
+      positionWorld.last.setXY(positionWorld.current.x, positionWorld.current.y);
+      positionWorld.current.setXY(transformedWorldPosition.x, transformedWorldPosition.y);
     }
     return;
   }

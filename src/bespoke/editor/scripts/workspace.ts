@@ -89,14 +89,14 @@ export class Workspace {
   drawInterface() {
     const ctx = this.state.ctx;
     const mouseState = this.mouseState;
-    const viewMouseX: number = mouseState.getScreenPosition(Moment.Current).getX();
-    const viewMouseY: number = mouseState.getScreenPosition(Moment.Current).getY();
-    const worldMouseX: number = mouseState.getWorldPosition(Moment.Current).getX();
-    const worldMouseY: number = mouseState.getWorldPosition(Moment.Current).getY();
-    const viewMouseLastX: number = mouseState.getScreenPosition(Moment.Last).getX();
-    const viewMouseLastY: number = mouseState.getScreenPosition(Moment.Last).getY();
-    const worldMouseLastX: number = mouseState.getWorldPosition(Moment.Last).getX();
-    const worldMouseLastY: number = mouseState.getWorldPosition(Moment.Last).getY();
+    const viewMouseX: number = mouseState.getScreenPosition(Moment.Current).x;
+    const viewMouseY: number = mouseState.getScreenPosition(Moment.Current).y;
+    const worldMouseX: number = mouseState.getWorldPosition(Moment.Current).x;
+    const worldMouseY: number = mouseState.getWorldPosition(Moment.Current).y;
+    const viewMouseLastX: number = mouseState.getScreenPosition(Moment.Last).x;
+    const viewMouseLastY: number = mouseState.getScreenPosition(Moment.Last).y;
+    const worldMouseLastX: number = mouseState.getWorldPosition(Moment.Last).x;
+    const worldMouseLastY: number = mouseState.getWorldPosition(Moment.Last).y;
     const primaryClicked: boolean = mouseState.getButtonStatePrimary(Moment.Current);
     const auxiliaryClicked: boolean = mouseState.getButtonStateAuxiliary(Moment.Current);
     const secondaryClicked: boolean = mouseState.getButtonStateSecondary(Moment.Current);
@@ -114,7 +114,7 @@ export class Workspace {
     ctx.resetTransform();
     ctx.fillStyle = "#000000";
     ctx.fillText(
-      `World Position (${this.state.worldPosition.getX()}, ${this.state.worldPosition.getY()})`,
+      `World Position (${this.state.worldPosition.x}, ${this.state.worldPosition.y})`,
       viewMouseX + 50,
       viewMouseY + 10
     );
@@ -143,8 +143,8 @@ export class Workspace {
     const ctx = this.state.ctx;
     ctx.scale(this.state.scale, this.state.scale);
     ctx.fillStyle = "#e5e5e5";
-    ctx.fillRect(this.state.worldPosition.getX(), this.state.worldPosition.getY(), 800, 800);
+    ctx.fillRect(this.state.worldPosition.x, this.state.worldPosition.y, 800, 800);
     ctx.fillStyle = "#000000";
-    ctx.fillText("World (0,0)", this.state.worldPosition.getX(), this.state.worldPosition.getY());
+    ctx.fillText("World (0,0)", this.state.worldPosition.x, this.state.worldPosition.y);
   }
 }

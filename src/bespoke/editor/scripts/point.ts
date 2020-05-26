@@ -1,53 +1,51 @@
 export class Point {
-  private x: number;
-  private y: number;
+  private _x: number;
+  private _y: number;
 
   constructor(x: number, y: number) {
-    //x coordinate
-    this.x = x;
-    //y coordinate
-    this.y = y;
+    this._x = x;
+    this._y = y;
   }
 
   //returns the "x" coordinate of the point
-  public getX(): number {
-    return this.x;
+  public get x(): number {
+    return this._x;
   }
 
   //returns the "y" coordinate of the point
-  public getY(): number {
-    return this.y;
+  public get y(): number {
+    return this._y;
   }
 
   //sets the "x" coordinate of the point
-  public setX(x: number): void {
-    if (x !== this.x) this.x = x;
+  public set x(x: number) {
+    if (x !== this._x) this._x = x;
     return;
   }
 
   //sets the "y" coordinate of the point
-  public setY(y: number): void {
-    if (y !== this.y) this.y = y;
+  public set y(y: number) {
+    if (y !== this._y) this._y = y;
     return;
   }
 
   //sets both the "x" and the "y" coordinates of the point
   public setXY(x: number, y: number): void {
-    this.setX(x);
-    this.setY(y);
+    this._x = x;
+    this._y = y;
     return;
   }
 }
 
 //takes two Points and returns the difference in their "x" coordinates
 export function deltaX(a: Point, b: Point): number {
-  const dx = a.getX() - b.getX();
+  const dx = a.x - b.x;
   return dx;
 }
 
 //takes two Points and returns the difference in their "y" coordinates
 export function deltaY(a: Point, b: Point): number {
-  const dy = a.getY() - b.getY();
+  const dy = a.y - b.y;
   return dy;
 }
 
@@ -75,15 +73,15 @@ export function angleDeg(a: Point, b: Point): number {
 
 //takes two Points and returns the Point where a projection would meet if Point "b" was extended along the "x" axis and Point "a" was extended to meet the extension of Point "b"
 export function projectH(a: Point, b: Point): Point {
-  const projX = b.getX() + deltaX(a, b);
-  const projY = b.getY();
+  const projX = b.x + deltaX(a, b);
+  const projY = b.y;
   return new Point(projX, projY);
 }
 
 //takes two Points and returns the Point where a projection would meet if Point "b" was extended along the "y" axis and Point "a" was extended to meet the extension of Point "b"
 export function projectV(a: Point, b: Point): Point {
-  const projX = b.getX();
-  const projY = b.getY() + deltaY(a, b);
+  const projX = b.x;
+  const projY = b.y + deltaY(a, b);
   return new Point(projX, projY);
 }
 
@@ -101,22 +99,22 @@ export function midPoint(a: Point, b: Point): Point {
 
 //returns the Point that is Point "a" offset on the x axis by "offsetX" and on the y axis by "offsetY"
 export function offsetPoint(a: Point, offsetX: number, offsetY: number): Point {
-  const newX = a.getX() + offsetX;
-  const newY = a.getY() + offsetY;
+  const newX = a.x + offsetX;
+  const newY = a.y + offsetY;
   return new Point(newX, newY);
 }
 
 //returns a Point that is the result of multiplying the "x" and "y" coordinates of Point "a" by the specified "factor"
 export function multiplyPoint(a: Point, factor: number): Point {
-  const newX = a.getX() * factor;
-  const newY = a.getY() * factor;
+  const newX = a.x * factor;
+  const newY = a.y * factor;
   return new Point(newX, newY);
 }
 
 //returns a Point that is the result of dividing the "x" and "y" coordinates of Point "a" by the specified "divisor"
 export function dividePoint(a: Point, divisor: number): Point {
   if (divisor === 0) return new Point(Infinity, Infinity);
-  const newX = a.getX() / divisor;
-  const newY = a.getY() / divisor;
+  const newX = a.x / divisor;
+  const newY = a.y / divisor;
   return new Point(newX, newY);
 }
