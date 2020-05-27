@@ -1,17 +1,7 @@
-import { Point } from "./point";
+import { Point, ChronologicalPoint } from "./point";
 import { WorkspaceState } from "./workspace";
 import * as spatialOps from "./spatial-ops";
-
-export enum Moment {
-  Current,
-  Last,
-}
-
-export enum ScrollDirection {
-  None,
-  In,
-  Out,
-}
+import { Moment, ChronologicalBoolean } from "./basic";
 
 enum MouseButton {
   None = 0,
@@ -20,21 +10,17 @@ enum MouseButton {
   Secondary = 2,
 }
 
-interface ChronologicalPoint {
-  current: Point;
-  last: Point;
-}
-
-interface ChronologicalBoolean {
-  current: boolean;
-  last: boolean;
+enum ScrollDirection {
+  None,
+  In,
+  Out,
 }
 
 interface Scroll {
   direction: ScrollDirection;
 }
 
-class Action {
+class MouseAction {
   private state: ChronologicalBoolean;
   constructor() {
     this.state = { current: false, last: false };
@@ -55,12 +41,12 @@ class Action {
 export class Mouse {
   private positionScreen: ChronologicalPoint;
   private positionWorld: ChronologicalPoint;
-  private primaryButton: Action;
-  private auxiliaryButton: Action;
-  private secondaryButton: Action;
-  private drag: Action;
-  private scrollIn: Action;
-  private scrollOut: Action;
+  private primaryButton: MouseAction;
+  private auxiliaryButton: MouseAction;
+  private secondaryButton: MouseAction;
+  private drag: MouseAction;
+  private scrollIn: MouseAction;
+  private scrollOut: MouseAction;
   constructor(elementState: WorkspaceState) {
     this.positionScreen = {
       current: new Point(0, 0),
@@ -70,12 +56,12 @@ export class Mouse {
       current: new Point(0, 0),
       last: new Point(0, 0),
     };
-    this.primaryButton = new Action();
-    this.auxiliaryButton = new Action();
-    this.secondaryButton = new Action();
-    this.drag = new Action();
-    this.scrollIn = new Action();
-    this.scrollOut = new Action();
+    this.primaryButton = new MouseAction();
+    this.auxiliaryButton = new MouseAction();
+    this.secondaryButton = new MouseAction();
+    this.drag = new MouseAction();
+    this.scrollIn = new MouseAction();
+    this.scrollOut = new MouseAction();
     console.log("Made a new Mouse");
   }
 

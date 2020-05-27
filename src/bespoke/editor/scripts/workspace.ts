@@ -1,8 +1,9 @@
 import { Point } from "./point";
 import * as basic from "./basic";
+import { Moment } from "./basic";
 import * as mouse from "./mouse";
 import * as spatialOps from "./spatial-ops";
-import { Mouse, Moment } from "./mouse";
+import { Mouse } from "./mouse";
 
 export interface WorkspaceState {
   ctx: CanvasRenderingContext2D;

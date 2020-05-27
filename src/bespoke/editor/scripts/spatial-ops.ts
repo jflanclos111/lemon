@@ -1,7 +1,8 @@
 import { Point } from "./point";
 import * as point from "./point";
 import { WorkspaceState, WorkspaceConfigParameters } from "./workspace";
-import { Mouse, Moment, ScrollDirection } from "./mouse";
+import { Mouse } from "./mouse";
+import { Moment } from "./basic";
 import * as basic from "./basic";
 
 export function screenToWorld(scale: number, itemPositionOnScreen: Point, canvasWorldPosition: Point): Point {
