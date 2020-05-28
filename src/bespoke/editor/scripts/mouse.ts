@@ -1,7 +1,7 @@
 import { Point, ChronologicalPoint } from "./point";
 import { WorkspaceState } from "./workspace";
 import * as spatialOps from "./spatial-ops";
-import { Moment, ChronologicalBoolean } from "./basic";
+import { Moment } from "./basic";
 
 enum MouseButton {
   None = 0,
@@ -21,20 +21,19 @@ interface Scroll {
 }
 
 class MouseAction {
-  private state: ChronologicalBoolean;
-  constructor() {
-    this.state = { current: false, last: false };
+  constructor(private _currentState: boolean = false, private _lastState: boolean = false) {}
+
+  public get currentState(): boolean {
+    return this._currentState;
   }
 
-  public getState(which: Moment = Moment.Current): boolean {
-    const state = this.state;
-    return which === Moment.Current ? state.current : state.last;
+  public get lastState(): boolean {
+    return this._lastState;
   }
 
-  public setState(stateTarget: boolean): void {
-    this.state.last = this.state.current;
-    this.state.current = stateTarget;
-    return;
+  public set currentState(target: boolean) {
+    if (this._lastState !== this._currentState) this._lastState = this._currentState;
+    this._currentState = target;
   }
 }
 
@@ -113,36 +112,36 @@ export class Mouse {
   //returns the state of the primary button of the mouse at the moment (which) specified. by default returns the current state
   public getButtonStatePrimary(which: Moment = Moment.Current): boolean {
     const primaryButton = this.primaryButton;
-    return which === Moment.Current ? primaryButton.getState(Moment.Current) : primaryButton.getState(Moment.Last);
+    return which === Moment.Current ? primaryButton.currentState : primaryButton.lastState;
   }
 
   //returns the state of the auxiliary button of the mouse at the moment (which) specified. by default returns the current state
   public getButtonStateAuxiliary(which: Moment = Moment.Current): boolean {
     const auxiliaryButton = this.auxiliaryButton;
-    return which === Moment.Current ? auxiliaryButton.getState(Moment.Current) : auxiliaryButton.getState(Moment.Last);
+    return which === Moment.Current ? auxiliaryButton.currentState : auxiliaryButton.lastState;
   }
 
   //returns the state of the secondary button of the mouse at the moment (which) specified. by default returns the current state
   public getButtonStateSecondary(which: Moment = Moment.Current): boolean {
     const secondaryButton = this.secondaryButton;
-    return which === Moment.Current ? secondaryButton.getState(Moment.Current) : secondaryButton.getState(Moment.Last);
+    return which === Moment.Current ? secondaryButton.currentState : secondaryButton.lastState;
   }
 
   //returns the state of dragging of the mouse at the moment (which) specified. by default returns the current state
   public getStateDragging(which: Moment = Moment.Current): boolean {
     const drag = this.drag;
-    return which === Moment.Current ? drag.getState(Moment.Current) : drag.getState(Moment.Last);
+    return which === Moment.Current ? drag.currentState : drag.lastState;
   }
 
   //returns the state of dragging of the mouse at the moment (which) specified. by default returns the current state
   public getStateScrollIn(which: Moment = Moment.Current): boolean {
     const scrollIn = this.scrollIn;
-    return which === Moment.Current ? scrollIn.getState(Moment.Current) : scrollIn.getState(Moment.Last);
+    return which === Moment.Current ? scrollIn.currentState : scrollIn.lastState;
   }
 
   public getStateScrollOut(which: Moment = Moment.Current): boolean {
     const scrollOut = this.scrollOut;
-    return which === Moment.Current ? scrollOut.getState(Moment.Current) : scrollOut.getState(Moment.Last);
+    return which === Moment.Current ? scrollOut.currentState : scrollOut.lastState;
   }
 
   private handleWheelEvent(mouseEvent: WheelEvent): Scroll {
@@ -151,10 +150,10 @@ export class Mouse {
     let activity: ScrollDirection = ScrollDirection.None;
     if (mouseEvent.type === "wheel") {
       if (mouseEvent.deltaY < 0) {
-        scrollIn.setState(true);
+        scrollIn.currentState = true;
         activity = ScrollDirection.In;
       } else if (mouseEvent.deltaY > 0) {
-        scrollOut.setState(true);
+        scrollOut.currentState = true;
         activity = ScrollDirection.Out;
       }
     }
@@ -174,24 +173,23 @@ export class Mouse {
     this.setScreenPosition(workspaceState, mouseEvent);
     this.setWorldPosition(workspaceState, mouseEvent);
     if (mouseEvent.type === "mousedown") {
-      primaryButton.setState(mouseEvent.buttons === MouseButton.Primary ? true : false);
-      auxiliaryButton.setState(mouseEvent.buttons === MouseButton.Auxiliary ? true : false);
-      secondaryButton.setState(mouseEvent.buttons === MouseButton.Secondary ? true : false);
-      drag.setState(
+      primaryButton.currentState = mouseEvent.buttons === MouseButton.Primary ? true : false;
+      auxiliaryButton.currentState = mouseEvent.buttons === MouseButton.Auxiliary ? true : false;
+      secondaryButton.currentState = mouseEvent.buttons === MouseButton.Secondary ? true : false;
+      drag.currentState =
         mouseEvent.buttons === MouseButton.Primary ||
-          mouseEvent.buttons === MouseButton.Auxiliary ||
-          mouseEvent.buttons === MouseButton.Secondary
+        mouseEvent.buttons === MouseButton.Auxiliary ||
+        mouseEvent.buttons === MouseButton.Secondary
           ? true
-          : false
-      );
+          : false;
     } else if (mouseEvent.type !== "mousedown" && mouseEvent.buttons === MouseButton.None) {
-      primaryButton.setState(false);
-      auxiliaryButton.setState(false);
-      secondaryButton.setState(false);
-      drag.setState(false);
+      primaryButton.currentState = false;
+      auxiliaryButton.currentState = false;
+      secondaryButton.currentState = false;
+      drag.currentState = false;
     }
-    if (scroll.direction !== ScrollDirection.In) scrollIn.setState(false);
-    if (scroll.direction !== ScrollDirection.Out) scrollOut.setState(false);
+    if (scroll.direction !== ScrollDirection.In) scrollIn.currentState = false;
+    if (scroll.direction !== ScrollDirection.Out) scrollOut.currentState = false;
     return;
   }
 }
