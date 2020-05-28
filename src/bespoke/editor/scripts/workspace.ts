@@ -1,6 +1,5 @@
 import { Point } from "./point";
 import * as basic from "./basic";
-import { Moment } from "./basic";
 import * as mouse from "./mouse";
 import * as spatialOps from "./spatial-ops";
 import { Mouse } from "./mouse";
@@ -35,7 +34,7 @@ export class Workspace {
       scaleMin: 0.01,
       scaleMax: 2.0,
     };
-    this.mouseState = new Mouse(this.state);
+    this.mouseState = new Mouse();
     this.updateTime = 0;
 
     this.configCanvas();
@@ -90,26 +89,26 @@ export class Workspace {
   drawInterface() {
     const ctx = this.state.ctx;
     const mouseState = this.mouseState;
-    const viewMouseX: number = mouseState.getScreenPosition(Moment.Current).x;
-    const viewMouseY: number = mouseState.getScreenPosition(Moment.Current).y;
-    const worldMouseX: number = mouseState.getWorldPosition(Moment.Current).x;
-    const worldMouseY: number = mouseState.getWorldPosition(Moment.Current).y;
-    const viewMouseLastX: number = mouseState.getScreenPosition(Moment.Last).x;
-    const viewMouseLastY: number = mouseState.getScreenPosition(Moment.Last).y;
-    const worldMouseLastX: number = mouseState.getWorldPosition(Moment.Last).x;
-    const worldMouseLastY: number = mouseState.getWorldPosition(Moment.Last).y;
-    const primaryClicked: boolean = mouseState.getButtonStatePrimary(Moment.Current);
-    const auxiliaryClicked: boolean = mouseState.getButtonStateAuxiliary(Moment.Current);
-    const secondaryClicked: boolean = mouseState.getButtonStateSecondary(Moment.Current);
-    const dragging: boolean = mouseState.getStateDragging(Moment.Current);
-    const scrollIn: boolean = mouseState.getStateScrollIn(Moment.Current);
-    const scrollOut: boolean = mouseState.getStateScrollOut(Moment.Current);
-    const primaryClickedLast: boolean = mouseState.getButtonStatePrimary(Moment.Last);
-    const auxiliaryClickedLast: boolean = mouseState.getButtonStateAuxiliary(Moment.Last);
-    const secondaryClickedLast: boolean = mouseState.getButtonStateSecondary(Moment.Last);
-    const draggingLast: boolean = mouseState.getStateDragging(Moment.Last);
-    const scrollInLast: boolean = mouseState.getStateScrollIn(Moment.Last);
-    const scrollOutLast: boolean = mouseState.getStateScrollOut(Moment.Last);
+    const viewMouseX: number = mouseState.positionScreenCurrent.x;
+    const viewMouseY: number = mouseState.positionScreenCurrent.y;
+    const worldMouseX: number = mouseState.positionWorldCurrent.x;
+    const worldMouseY: number = mouseState.positionWorldCurrent.y;
+    const viewMouseLastX: number = mouseState.positionScreenLast.x;
+    const viewMouseLastY: number = mouseState.positionScreenLast.y;
+    const worldMouseLastX: number = mouseState.positionWorldLast.x;
+    const worldMouseLastY: number = mouseState.positionWorldLast.y;
+    const primaryClicked: boolean = mouseState.primaryButtonClick.currentState;
+    const auxiliaryClicked: boolean = mouseState.auxiliaryButtonClick.currentState;
+    const secondaryClicked: boolean = mouseState.secondaryButtonClick.currentState;
+    const dragging: boolean = mouseState.drag.currentState;
+    const scrollIn: boolean = mouseState.scrollIn.currentState;
+    const scrollOut: boolean = mouseState.scrollOut.currentState;
+    const primaryClickedLast: boolean = mouseState.primaryButtonClick.lastState;
+    const auxiliaryClickedLast: boolean = mouseState.auxiliaryButtonClick.lastState;
+    const secondaryClickedLast: boolean = mouseState.secondaryButtonClick.lastState;
+    const draggingLast: boolean = mouseState.drag.lastState;
+    const scrollInLast: boolean = mouseState.scrollIn.lastState;
+    const scrollOutLast: boolean = mouseState.scrollOut.lastState;
     const scale: number = this.state.scale;
     const updateTime = this.updateTime;
     ctx.resetTransform();

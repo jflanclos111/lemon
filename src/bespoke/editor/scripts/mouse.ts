@@ -1,23 +1,12 @@
-import { Point, ChronologicalPoint } from "./point";
+import { Point } from "./point";
 import { WorkspaceState } from "./workspace";
 import * as spatialOps from "./spatial-ops";
-import { Moment } from "./basic";
 
 enum MouseButton {
   None = 0,
   Primary = 1,
   Auxiliary = 4,
   Secondary = 2,
-}
-
-enum ScrollDirection {
-  None,
-  In,
-  Out,
-}
-
-interface Scroll {
-  direction: ScrollDirection;
 }
 
 class MouseAction {
@@ -38,158 +27,110 @@ class MouseAction {
 }
 
 export class Mouse {
-  private positionScreen: ChronologicalPoint;
-  private positionWorld: ChronologicalPoint;
-  private primaryButton: MouseAction;
-  private auxiliaryButton: MouseAction;
-  private secondaryButton: MouseAction;
-  private drag: MouseAction;
-  private scrollIn: MouseAction;
-  private scrollOut: MouseAction;
-  constructor(elementState: WorkspaceState) {
-    this.positionScreen = {
-      current: new Point(0, 0),
-      last: new Point(0, 0),
-    };
-    this.positionWorld = {
-      current: new Point(0, 0),
-      last: new Point(0, 0),
-    };
-    this.primaryButton = new MouseAction();
-    this.auxiliaryButton = new MouseAction();
-    this.secondaryButton = new MouseAction();
-    this.drag = new MouseAction();
-    this.scrollIn = new MouseAction();
-    this.scrollOut = new MouseAction();
-    console.log("Made a new Mouse");
+  constructor(
+    private _positionScreenCurrent = new Point(0, 0),
+    private _positionScreenLast = new Point(0, 0),
+    private _positionWorldCurrent = new Point(0, 0),
+    private _positionWorldLast = new Point(0, 0),
+    private _primaryButtonClick: MouseAction = new MouseAction(),
+    private _auxiliaryButtonClick: MouseAction = new MouseAction(),
+    private _secondaryButtonClick: MouseAction = new MouseAction(),
+    private _drag: MouseAction = new MouseAction(),
+    private _scrollIn: MouseAction = new MouseAction(),
+    private _scrollOut: MouseAction = new MouseAction()
+  ) {}
+
+  public get positionScreenCurrent(): Point {
+    return this._positionScreenCurrent;
   }
 
-  //returns both the "x" and the "y" coordinates of the screen position of the mouse at the moment (which) specified. by default returns the current state
-  public getScreenPosition(which: Moment = Moment.Current): Point {
-    const positionScreen = this.positionScreen;
-    return new Point(
-      which === Moment.Current ? positionScreen.current.x : positionScreen.last.x,
-      which === Moment.Current ? positionScreen.current.y : positionScreen.last.y
-    );
+  public get positionScreenLast(): Point {
+    return this._positionScreenLast;
+  }
+
+  public get positionWorldCurrent(): Point {
+    return this._positionWorldCurrent;
+  }
+
+  public get positionWorldLast(): Point {
+    return this._positionWorldLast;
+  }
+
+  public get primaryButtonClick(): MouseAction {
+    return this._primaryButtonClick;
+  }
+
+  public get auxiliaryButtonClick(): MouseAction {
+    return this._auxiliaryButtonClick;
+  }
+
+  public get secondaryButtonClick(): MouseAction {
+    return this._secondaryButtonClick;
+  }
+
+  public get drag(): MouseAction {
+    return this._drag;
+  }
+
+  public get scrollIn(): MouseAction {
+    return this._scrollIn;
+  }
+
+  public get scrollOut(): MouseAction {
+    return this._scrollOut;
   }
 
   private setScreenPosition(workspaceState: WorkspaceState, mouseEvent: MouseEvent): void {
     const canvas = workspaceState.ctx.canvas;
-    const positionScreen = this.positionScreen;
-    if (positionScreen.last !== positionScreen.current) {
-      positionScreen.last.setXY(positionScreen.current.x, positionScreen.current.y);
-      positionScreen.current.setXY(mouseEvent.x - canvas.offsetLeft, mouseEvent.y - canvas.offsetTop);
-    }
+    this.positionScreenLast.x = this.positionScreenCurrent.x;
+    this.positionScreenLast.y = this.positionScreenCurrent.y;
+    this.positionScreenCurrent.x = mouseEvent.x - canvas.offsetLeft;
+    this.positionScreenCurrent.y = mouseEvent.y - canvas.offsetTop;
     return;
   }
 
-  //returns both the "x" and "y" coordinates of the world position of the mouse at the moment (which) specified. by default returns the current state
-  public getWorldPosition(which: Moment = Moment.Current): Point {
-    const positionWorld = this.positionWorld;
-    return new Point(
-      which === Moment.Current ? positionWorld.current.x : positionWorld.last.x,
-      which === Moment.Current ? positionWorld.current.y : positionWorld.last.y
-    );
-  }
-
-  private setWorldPosition(workspaceState: WorkspaceState, mouseEvent: MouseEvent): void {
-    const canvas = workspaceState.ctx.canvas;
-    const scale = workspaceState.scale;
-    const positionScreen = this.positionScreen;
-    const positionWorld = this.positionWorld;
+  private setWorldPosition(workspaceState: WorkspaceState): void {
     const transformedWorldPosition = spatialOps.screenToWorld(
       workspaceState.scale,
-      positionScreen.current,
+      this.positionScreenCurrent,
       workspaceState.worldPosition
     );
-    if (positionWorld.last !== positionWorld.current) {
-      positionWorld.last.setXY(positionWorld.current.x, positionWorld.current.y);
-      positionWorld.current.setXY(transformedWorldPosition.x, transformedWorldPosition.y);
+    this.positionWorldLast.x = this.positionWorldCurrent.x;
+    this.positionWorldLast.y = this.positionWorldCurrent.y;
+    this.positionWorldCurrent.x = transformedWorldPosition.x;
+    this.positionWorldCurrent.y = transformedWorldPosition.y;
+    return;
+  }
+
+  private setMouseScroll(mouseEvent: WheelEvent): void {
+    if (mouseEvent.type === "wheel") {
+      this.scrollIn.currentState = mouseEvent.deltaY < 0 ? true : false;
+      this.scrollOut.currentState = mouseEvent.deltaY > 0 ? true : false;
+    } else {
+      this.scrollIn.currentState = false;
+      this.scrollOut.currentState = false;
     }
     return;
   }
 
-  //returns the state of the primary button of the mouse at the moment (which) specified. by default returns the current state
-  public getButtonStatePrimary(which: Moment = Moment.Current): boolean {
-    const primaryButton = this.primaryButton;
-    return which === Moment.Current ? primaryButton.currentState : primaryButton.lastState;
-  }
-
-  //returns the state of the auxiliary button of the mouse at the moment (which) specified. by default returns the current state
-  public getButtonStateAuxiliary(which: Moment = Moment.Current): boolean {
-    const auxiliaryButton = this.auxiliaryButton;
-    return which === Moment.Current ? auxiliaryButton.currentState : auxiliaryButton.lastState;
-  }
-
-  //returns the state of the secondary button of the mouse at the moment (which) specified. by default returns the current state
-  public getButtonStateSecondary(which: Moment = Moment.Current): boolean {
-    const secondaryButton = this.secondaryButton;
-    return which === Moment.Current ? secondaryButton.currentState : secondaryButton.lastState;
-  }
-
-  //returns the state of dragging of the mouse at the moment (which) specified. by default returns the current state
-  public getStateDragging(which: Moment = Moment.Current): boolean {
-    const drag = this.drag;
-    return which === Moment.Current ? drag.currentState : drag.lastState;
-  }
-
-  //returns the state of dragging of the mouse at the moment (which) specified. by default returns the current state
-  public getStateScrollIn(which: Moment = Moment.Current): boolean {
-    const scrollIn = this.scrollIn;
-    return which === Moment.Current ? scrollIn.currentState : scrollIn.lastState;
-  }
-
-  public getStateScrollOut(which: Moment = Moment.Current): boolean {
-    const scrollOut = this.scrollOut;
-    return which === Moment.Current ? scrollOut.currentState : scrollOut.lastState;
-  }
-
-  private handleWheelEvent(mouseEvent: WheelEvent): Scroll {
-    const scrollIn = this.scrollIn;
-    const scrollOut = this.scrollOut;
-    let activity: ScrollDirection = ScrollDirection.None;
-    if (mouseEvent.type === "wheel") {
-      if (mouseEvent.deltaY < 0) {
-        scrollIn.currentState = true;
-        activity = ScrollDirection.In;
-      } else if (mouseEvent.deltaY > 0) {
-        scrollOut.currentState = true;
-        activity = ScrollDirection.Out;
-      }
-    }
-    return { direction: activity };
+  private setMouseButtons(mouseEvent: MouseEvent): void {
+    this.primaryButtonClick.currentState = mouseEvent.buttons === MouseButton.Primary ? true : false;
+    this.auxiliaryButtonClick.currentState = mouseEvent.buttons === MouseButton.Auxiliary ? true : false;
+    this.secondaryButtonClick.currentState = mouseEvent.buttons === MouseButton.Secondary ? true : false;
+    this.drag.currentState =
+      mouseEvent.buttons === MouseButton.Primary ||
+      mouseEvent.buttons === MouseButton.Auxiliary ||
+      mouseEvent.buttons === MouseButton.Secondary
+        ? true
+        : false;
   }
 
   //runs a comprehensive update of all of the properties of the Mouse object based on the workspaceState and and mouseEvent specified
   public update(workspaceState: WorkspaceState, mouseEvent: any): void {
-    const primaryButton = this.primaryButton;
-    const auxiliaryButton = this.auxiliaryButton;
-    const secondaryButton = this.secondaryButton;
-    const drag = this.drag;
-    const scrollIn = this.scrollIn;
-    const scrollOut = this.scrollOut;
-    const scroll =
-      mouseEvent.type === "wheel" ? this.handleWheelEvent(mouseEvent) : { direction: ScrollDirection.None };
     this.setScreenPosition(workspaceState, mouseEvent);
-    this.setWorldPosition(workspaceState, mouseEvent);
-    if (mouseEvent.type === "mousedown") {
-      primaryButton.currentState = mouseEvent.buttons === MouseButton.Primary ? true : false;
-      auxiliaryButton.currentState = mouseEvent.buttons === MouseButton.Auxiliary ? true : false;
-      secondaryButton.currentState = mouseEvent.buttons === MouseButton.Secondary ? true : false;
-      drag.currentState =
-        mouseEvent.buttons === MouseButton.Primary ||
-        mouseEvent.buttons === MouseButton.Auxiliary ||
-        mouseEvent.buttons === MouseButton.Secondary
-          ? true
-          : false;
-    } else if (mouseEvent.type !== "mousedown" && mouseEvent.buttons === MouseButton.None) {
-      primaryButton.currentState = false;
-      auxiliaryButton.currentState = false;
-      secondaryButton.currentState = false;
-      drag.currentState = false;
-    }
-    if (scroll.direction !== ScrollDirection.In) scrollIn.currentState = false;
-    if (scroll.direction !== ScrollDirection.Out) scrollOut.currentState = false;
+    this.setWorldPosition(workspaceState);
+    this.setMouseButtons(mouseEvent);
+    this.setMouseScroll(mouseEvent);
     return;
   }
 }

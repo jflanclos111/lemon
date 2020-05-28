@@ -1,8 +1,3 @@
-export interface ChronologicalPoint {
-  current: Point;
-  last: Point;
-}
-
 export class Point {
   constructor(private _x: number, private _y: number) {}
 
@@ -24,13 +19,6 @@ export class Point {
   //sets the "y" coordinate of the point
   public set y(y: number) {
     if (y !== this._y) this._y = y;
-  }
-
-  //sets both the "x" and the "y" coordinates of the point
-  public setXY(x: number, y: number): void {
-    this.x = x;
-    this.y = y;
-    return;
   }
 }
 

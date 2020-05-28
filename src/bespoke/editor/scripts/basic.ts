@@ -1,20 +1,4 @@
 /**
- * Identifies present (Current) and past (Last) state in time.
- */
-export enum Moment {
-  Current,
-  Last,
-}
-
-/**
- * Interface that contains both the present (current) and past (last) state of a boolean.
- */
-export interface ChronologicalBoolean {
-  current: boolean;
-  last: boolean;
-}
-
-/**
  * Incements the operand by a specified amount if and only if the resulting value falls within the specified lower and upper bounds. Lower bound must be lower than and cannot be equal to upper bound.
  * @param {number} operand number to be incremented
  * @param {number} increment amount to increment by
