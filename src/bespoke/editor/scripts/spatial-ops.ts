@@ -1,6 +1,6 @@
 import { Point } from "./point";
 import * as point from "./point";
-import { WorkspaceState, WorkspaceConfigParameters } from "./workspace";
+import { WorkspaceState } from "./workspace";
 import { Mouse } from "./mouse";
 import * as basic from "./basic";
 
@@ -17,43 +17,31 @@ export function worldToScreen(scale: number, worldPositionInWorld: Point, canvas
 }
 
 export function getNewScale(
-  canvasState: WorkspaceState,
-  canvasConfig: WorkspaceConfigParameters,
+  currentScale: number,
+  scaleMin: number,
+  scaleMax: number,
+  scaleIncrement: number,
   mouseState: Mouse
 ): number {
-  const currentScale = canvasState.scale;
-  const scaleMin = canvasConfig.scaleMin;
-  const scaleMax = canvasConfig.scaleMax;
-  const scaleIncrement = canvasConfig.scaleDeltaCoarse;
   let increment = 0;
-  let newScale = currentScale;
-  if (mouseState.scrollIn.currentState) {
-    increment = scaleIncrement;
-  } else if (mouseState.scrollOut.currentState) {
-    increment = -scaleIncrement;
+  if (mouseState.scrollIn.currentState || mouseState.scrollOut.currentState) {
+    increment = mouseState.scrollIn.currentState ? scaleIncrement : -scaleIncrement;
   }
-  newScale = basic.setPrecision(basic.clamp(newScale, increment, scaleMin, scaleMax), 2);
-  return newScale;
+  return basic.setPrecision(basic.clamp(currentScale, increment, scaleMin, scaleMax), 2);
 }
 
 export function getNewWorldPosition(canvasState: WorkspaceState, mouseState: Mouse): Point {
   const scale = canvasState.scale;
   let newWorldX = canvasState.worldPosition.x;
   let newWorldY = canvasState.worldPosition.y;
-  const mouseScreenPositionCurrent = mouseState.positionScreenCurrent;
-  const mouseScreenPositionLast = mouseState.positionScreenLast;
-  const mouseWorldPositionCurrent = mouseState.positionWorldCurrent;
-
-  if (
-    (mouseState.drag.currentState && mouseState.auxiliaryButtonClick.currentState) ||
-    mouseState.scrollIn.currentState ||
-    mouseState.scrollOut.currentState
-  ) {
-    const dxPan = point.deltaX(mouseScreenPositionCurrent, mouseScreenPositionLast);
-    const dyPan = point.deltaY(mouseScreenPositionCurrent, mouseScreenPositionLast);
+  const panning = mouseState.drag.currentState && mouseState.auxiliaryButtonClick.currentState ? true : false;
+  const zooming = mouseState.scrollIn.currentState || mouseState.scrollOut.currentState ? true : false;
+  if (panning || zooming) {
+    const dxPan = point.deltaX(mouseState.positionScreenCurrent, mouseState.positionScreenLast);
+    const dyPan = point.deltaY(mouseState.positionScreenCurrent, mouseState.positionScreenLast);
     const mouseWorldPositionNext = screenToWorld(scale, mouseState.positionScreenCurrent, canvasState.worldPosition);
-    const dxZoom = point.deltaX(mouseWorldPositionCurrent, mouseWorldPositionNext);
-    const dyZoom = point.deltaY(mouseWorldPositionCurrent, mouseWorldPositionNext);
+    const dxZoom = point.deltaX(mouseState.positionWorldCurrent, mouseWorldPositionNext);
+    const dyZoom = point.deltaY(mouseState.positionWorldCurrent, mouseWorldPositionNext);
     newWorldX = canvasState.worldPosition.x + dxPan / scale - dxZoom;
     newWorldY = canvasState.worldPosition.y + dyPan / scale - dyZoom;
   }

@@ -81,7 +81,13 @@ export class Workspace {
     const configParameters = this.configParameters;
     const mouseState = this.mouseState;
     mouseState.update(state, event);
-    state.scale = spatialOps.getNewScale(state, configParameters, mouseState);
+    state.scale = spatialOps.getNewScale(
+      state.scale,
+      configParameters.scaleMin,
+      configParameters.scaleMax,
+      configParameters.scaleDeltaCoarse,
+      mouseState
+    );
     state.worldPosition = spatialOps.getNewWorldPosition(state, mouseState);
     this.render();
   };
