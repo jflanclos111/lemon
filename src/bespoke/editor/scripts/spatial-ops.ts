@@ -1,18 +1,16 @@
-import { Point } from "./point";
-import * as point from "./point";
-import { WorkspaceState } from "./workspace";
+import { Point, deltaX, deltaY, dividePoint } from "./point";
 import { Mouse } from "./mouse";
-import * as basic from "./basic";
+import { setPrecision, clamp } from "./basic";
 
 export function screenToWorld(scale: number, itemPositionOnScreen: Point, canvasWorldPosition: Point): Point {
-  const transformedX = point.deltaX(point.dividePoint(itemPositionOnScreen, scale), canvasWorldPosition);
-  const transformedY = point.deltaY(point.dividePoint(itemPositionOnScreen, scale), canvasWorldPosition);
+  const transformedX = deltaX(dividePoint(itemPositionOnScreen, scale), canvasWorldPosition);
+  const transformedY = deltaY(dividePoint(itemPositionOnScreen, scale), canvasWorldPosition);
   return new Point(transformedX, transformedY);
 }
 
 export function worldToScreen(scale: number, worldPositionInWorld: Point, canvasWorldPosition: Point): Point {
-  const transformedX = basic.setPrecision((worldPositionInWorld.x + canvasWorldPosition.x) * scale);
-  const transformedY = basic.setPrecision((worldPositionInWorld.y + canvasWorldPosition.y) * scale);
+  const transformedX = setPrecision((worldPositionInWorld.x + canvasWorldPosition.x) * scale);
+  const transformedY = setPrecision((worldPositionInWorld.y + canvasWorldPosition.y) * scale);
   return new Point(transformedX, transformedY);
 }
 
@@ -27,23 +25,22 @@ export function getNewScale(
   if (mouseState.scrollIn.currentState || mouseState.scrollOut.currentState) {
     increment = mouseState.scrollIn.currentState ? scaleIncrement : -scaleIncrement;
   }
-  return basic.setPrecision(basic.clamp(currentScale, increment, scaleMin, scaleMax), 2);
+  return setPrecision(clamp(currentScale, increment, scaleMin, scaleMax), 2);
 }
 
-export function getNewWorldPosition(canvasState: WorkspaceState, mouseState: Mouse): Point {
-  const scale = canvasState.scale;
-  let newWorldX = canvasState.worldPosition.x;
-  let newWorldY = canvasState.worldPosition.y;
+export function getNewWorldPosition(currentScale: number, currentWorldPosition: Point, mouseState: Mouse): Point {
+  let newWorldX = currentWorldPosition.x;
+  let newWorldY = currentWorldPosition.y;
   const panning = mouseState.drag.currentState && mouseState.auxiliaryButtonClick.currentState ? true : false;
   const zooming = mouseState.scrollIn.currentState || mouseState.scrollOut.currentState ? true : false;
   if (panning || zooming) {
-    const dxPan = point.deltaX(mouseState.positionScreenCurrent, mouseState.positionScreenLast);
-    const dyPan = point.deltaY(mouseState.positionScreenCurrent, mouseState.positionScreenLast);
-    const mouseWorldPositionNext = screenToWorld(scale, mouseState.positionScreenCurrent, canvasState.worldPosition);
-    const dxZoom = point.deltaX(mouseState.positionWorldCurrent, mouseWorldPositionNext);
-    const dyZoom = point.deltaY(mouseState.positionWorldCurrent, mouseWorldPositionNext);
-    newWorldX = canvasState.worldPosition.x + dxPan / scale - dxZoom;
-    newWorldY = canvasState.worldPosition.y + dyPan / scale - dyZoom;
+    const dxPan = deltaX(mouseState.positionScreenCurrent, mouseState.positionScreenLast);
+    const dyPan = deltaY(mouseState.positionScreenCurrent, mouseState.positionScreenLast);
+    const mouseWorldPositionNext = screenToWorld(currentScale, mouseState.positionScreenCurrent, currentWorldPosition);
+    const dxZoom = deltaX(mouseState.positionWorldCurrent, mouseWorldPositionNext);
+    const dyZoom = deltaY(mouseState.positionWorldCurrent, mouseWorldPositionNext);
+    newWorldX = currentWorldPosition.x + dxPan / currentScale - dxZoom;
+    newWorldY = currentWorldPosition.y + dyPan / currentScale - dyZoom;
   }
   return new Point(newWorldX, newWorldY);
 }

@@ -1,6 +1,6 @@
 import { Point } from "./point";
-import { WorkspaceState } from "./workspace";
-import * as spatialOps from "./spatial-ops";
+import { setPrecision } from "./basic";
+import { screenToWorld } from "./spatial-ops";
 
 enum MouseButton {
   None = 0,
@@ -28,6 +28,8 @@ class MouseAction {
 
 export class Mouse {
   constructor(
+    readonly canvasContext: CanvasRenderingContext2D,
+    readonly feedbackMode: boolean = false,
     private _positionScreenCurrent = new Point(0, 0),
     private _positionScreenLast = new Point(0, 0),
     private _positionWorldCurrent = new Point(0, 0),
@@ -80,21 +82,16 @@ export class Mouse {
     return this._scrollOut;
   }
 
-  private setScreenPosition(workspaceState: WorkspaceState, mouseEvent: MouseEvent): void {
-    const canvas = workspaceState.ctx.canvas;
+  private setScreenPosition(mouseEvent: MouseEvent): void {
     this.positionScreenLast.x = this.positionScreenCurrent.x;
     this.positionScreenLast.y = this.positionScreenCurrent.y;
-    this.positionScreenCurrent.x = mouseEvent.x - canvas.offsetLeft;
-    this.positionScreenCurrent.y = mouseEvent.y - canvas.offsetTop;
+    this.positionScreenCurrent.x = mouseEvent.x - this.canvasContext.canvas.offsetLeft;
+    this.positionScreenCurrent.y = mouseEvent.y - this.canvasContext.canvas.offsetTop;
     return;
   }
 
-  private setWorldPosition(workspaceState: WorkspaceState): void {
-    const transformedWorldPosition = spatialOps.screenToWorld(
-      workspaceState.scale,
-      this.positionScreenCurrent,
-      workspaceState.worldPosition
-    );
+  private setWorldPosition(scale: number, workspaceWorldPosition: Point): void {
+    const transformedWorldPosition = screenToWorld(scale, this.positionScreenCurrent, workspaceWorldPosition);
     this.positionWorldLast.x = this.positionWorldCurrent.x;
     this.positionWorldLast.y = this.positionWorldCurrent.y;
     this.positionWorldCurrent.x = transformedWorldPosition.x;
@@ -125,12 +122,40 @@ export class Mouse {
         : false;
   }
 
-  //runs a comprehensive update of all of the properties of the Mouse object based on the workspaceState and and mouseEvent specified
-  public update(workspaceState: WorkspaceState, mouseEvent: any): void {
-    this.setScreenPosition(workspaceState, mouseEvent);
-    this.setWorldPosition(workspaceState);
+  public update(scale: number, workspaceWorldPosition: Point, mouseEvent: any): void {
+    this.setScreenPosition(mouseEvent);
+    this.setWorldPosition(scale, workspaceWorldPosition);
     this.setMouseButtons(mouseEvent);
     this.setMouseScroll(mouseEvent);
     return;
+  }
+
+  public display() {
+    if (this.feedbackMode === true) {
+      const offsetXStart = this.positionScreenCurrent.x + 10;
+      const offsetYStart = this.positionScreenCurrent.y + 20;
+      const lineSpace = 15;
+      this.canvasContext.resetTransform();
+      this.canvasContext.fillStyle = "#000000";
+      this.canvasContext.fillText(
+        ` ${this.primaryButtonClick.currentState ? "P" : "_"} ${this.auxiliaryButtonClick.currentState ? "A" : "_"} ${
+          this.secondaryButtonClick.currentState ? "S" : "_"
+        }   ${this.drag.currentState ? "D" : "_"}   ${this.scrollIn.currentState ? "+" : "_"} ${
+          this.scrollOut.currentState ? "-" : "_"
+        }`,
+        offsetXStart,
+        offsetYStart + lineSpace * 1
+      );
+      this.canvasContext.fillText(
+        `(${setPrecision(this.positionScreenCurrent.x, 2)}, ${setPrecision(this.positionScreenCurrent.y, 2)}): Screen`,
+        offsetXStart,
+        offsetYStart + lineSpace * 2
+      );
+      this.canvasContext.fillText(
+        `(${setPrecision(this.positionWorldCurrent.x, 2)}, ${setPrecision(this.positionWorldCurrent.y, 2)}): World`,
+        offsetXStart,
+        offsetYStart + lineSpace * 3
+      );
+    }
   }
 }
