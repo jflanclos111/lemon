@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import "./editor.styles.scss";
-import * as workspace from "./scripts/workspace";
+import { Workspace } from "./scripts/workspace";
 import { useState } from "react";
 
 let canvasView = null;
@@ -32,7 +32,7 @@ export function Editor() {
     window.addEventListener("contextmenu", (event) => event.preventDefault());
     if (firstUpdate.current) {
       windowResize();
-      canvasView = new workspace.Workspace(canvasRef.current);
+      canvasView = new Workspace(canvasRef.current);
       firstUpdate.current = false;
     } else {
       canvasView.render();

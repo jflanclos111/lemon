@@ -2,6 +2,9 @@ import { Point } from "./point";
 import { setPrecision } from "./basic";
 import { screenToWorld } from "./spatial-ops";
 
+/**
+ * Identifies a specific mouse button or none
+ */
 enum MouseButton {
   None = 0,
   Primary = 1,
@@ -10,6 +13,12 @@ enum MouseButton {
 }
 
 class MouseAction {
+  /**
+   * A mouse action such as clicking of a mouse button, scrolling, or dragging.
+   * @param {boolean} [_currentState] the current state of the mouse action; defaults to false
+   * @param {boolean} [_lastState] the last state of the mouse action; defaults to false
+   * @class
+   */
   constructor(private _currentState: boolean = false, private _lastState: boolean = false) {}
 
   public get currentState(): boolean {
@@ -20,13 +29,33 @@ class MouseAction {
     return this._lastState;
   }
 
-  public set currentState(target: boolean) {
-    if (this._lastState !== this._currentState) this._lastState = this._currentState;
-    this._currentState = target;
+  /**
+   * Sets current state of the mouse action and records the last state of the mouse action.
+   * @param {boolean} newState
+   */
+  public set currentState(newState: boolean) {
+    this._lastState = this._currentState;
+    this._currentState = newState;
   }
 }
 
 export class Mouse {
+  /**
+   * A mouse object containing the state of the mouse within a canvas including locations, button states, and scrolling.
+   * @param {CanvasRenderingContext2D} canvasContext the context of the canvas to which the Mouse object is linked
+   * @param {boolean} [feedbackMode] enables or disables display of the mouse location and button state on screen; defaults to false
+   * @param {Point} [_positionScreenCurrent] the current position of the mouse on the screen
+   * @param {Point} [_positionScreenLast] the last position of the mouse on the screen
+   * @param {Point} [_positionWorldCurrent] the current position of the mouse in the world
+   * @param {Point} [_positionWorldLast] the last position of the mouse in the world
+   * @param {MouseAction} [_primaryButtonClick] an object containing the status of the primary mouse button
+   * @param {MouseAction} [_auxiliaryButtonClick] an object containing the status of the auxiliary mouse button
+   * @param {MouseAction} [_secondaryButtonClick] an object containing the status of the secondary mouse button
+   * @param {MouseAction} [_drag] an object containing the status of the drag function
+   * @param {MouseAction} [_scrollIn] an object containing the status of the scroll in function
+   * @param {MouseAction} [_scrollOut] an object containing the status of the scroll out function
+   * @class
+   */
   constructor(
     readonly canvasContext: CanvasRenderingContext2D,
     readonly feedbackMode: boolean = false,
@@ -82,6 +111,11 @@ export class Mouse {
     return this._scrollOut;
   }
 
+  /**
+   * Sets the current screen position of the mouse cursor. Also records the last screen position of the cursor before the update.
+   * @param {MouseEvent} mouseEvent the event triggering the update
+   * @returns {void}
+   */
   private setScreenPosition(mouseEvent: MouseEvent): void {
     this.positionScreenLast.x = this.positionScreenCurrent.x;
     this.positionScreenLast.y = this.positionScreenCurrent.y;
@@ -90,6 +124,12 @@ export class Mouse {
     return;
   }
 
+  /**
+   * Sets the current world position of the mouse cursor. Also records the last world position of the cursor before the update.
+   * @param {number} scale the current world scale
+   * @param {Point} workspaceWorldPosition the current position of the origin of the workspace in the world
+   * @returns {void}
+   */
   private setWorldPosition(scale: number, workspaceWorldPosition: Point): void {
     const transformedWorldPosition = screenToWorld(scale, this.positionScreenCurrent, workspaceWorldPosition);
     this.positionWorldLast.x = this.positionWorldCurrent.x;
@@ -99,6 +139,11 @@ export class Mouse {
     return;
   }
 
+  /**
+   * Updates the current scroll state of the mouse.
+   * @param {WheelEvent} mouseEvent the event triggering the update
+   * @returns {void}
+   */
   private setMouseScroll(mouseEvent: WheelEvent): void {
     if (mouseEvent.type === "wheel") {
       this.scrollIn.currentState = mouseEvent.deltaY < 0 ? true : false;
@@ -110,6 +155,11 @@ export class Mouse {
     return;
   }
 
+  /**
+   * Updates the current state of the mouse buttons.
+   * @param {MouseEvent} mouseEvent the event triggering the update
+   * @returns {void}
+   */
   private setMouseButtons(mouseEvent: MouseEvent): void {
     this.primaryButtonClick.currentState = mouseEvent.buttons === MouseButton.Primary ? true : false;
     this.auxiliaryButtonClick.currentState = mouseEvent.buttons === MouseButton.Auxiliary ? true : false;
@@ -122,6 +172,13 @@ export class Mouse {
         : false;
   }
 
+  /**
+   * Updates the state of the mouse object based on the position and scale of the workpace in the world.
+   * @param {number} scale the current world scale
+   * @param {Point} workspaceWorldPosition the current position of the origin of the workspace in the world
+   * @param {any} mouseEvent the event triggering the update
+   * @returns {void}
+   */
   public update(scale: number, workspaceWorldPosition: Point, mouseEvent: any): void {
     this.setScreenPosition(mouseEvent);
     this.setWorldPosition(scale, workspaceWorldPosition);
@@ -130,7 +187,11 @@ export class Mouse {
     return;
   }
 
-  public display() {
+  /**
+   * Displays the mouse status if feedback mode is enabled in the Mouse object.
+   * @returns {void}
+   */
+  public display(): void {
     if (this.feedbackMode === true) {
       const offsetXStart = this.positionScreenCurrent.x + 10;
       const offsetYStart = this.positionScreenCurrent.y + 20;

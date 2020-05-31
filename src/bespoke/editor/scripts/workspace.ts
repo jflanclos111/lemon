@@ -1,6 +1,7 @@
 import { Point } from "./point";
 import { getNewScale, getNewWorldPosition } from "./spatial-ops";
 import { Mouse } from "./mouse";
+import { Sheet } from "./sheet";
 
 export class Workspace {
   constructor(
@@ -10,6 +11,7 @@ export class Workspace {
     readonly scaleMin: number = 0.01,
     readonly scaleMax: number = 2.0,
     readonly mouseState: Mouse = new Mouse(ctx, true),
+    readonly sheetState: Sheet = new Sheet(ctx),
     private _worldPosition: Point = new Point(0, 0),
     private _scale: number = 1
   ) {
@@ -56,7 +58,7 @@ export class Workspace {
 
   public render(): void {
     this.clear();
-    this.drawContent();
+    this.sheetState.drawSheet(this.scale, this.worldPosition);
     this.mouseState.display();
   }
 
@@ -66,12 +68,4 @@ export class Workspace {
     this.worldPosition = getNewWorldPosition(this.scale, this.worldPosition, this.mouseState);
     this.render();
   };
-
-  drawContent() {
-    this.ctx.scale(this.scale, this.scale);
-    this.ctx.fillStyle = "#e5e5e5";
-    this.ctx.fillRect(this.worldPosition.x, this.worldPosition.y, 800, 800);
-    this.ctx.fillStyle = "#000000";
-    this.ctx.fillText("World (0,0)", this.worldPosition.x, this.worldPosition.y);
-  }
 }

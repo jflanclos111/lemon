@@ -13,12 +13,12 @@ export class Point {
 
   //sets the "x" coordinate of the point
   public set x(newX: number) {
-    if (newX !== this._x) this._x = newX;
+    this._x = newX;
   }
 
   //sets the "y" coordinate of the point
   public set y(newY: number) {
-    if (newY !== this._y) this._y = newY;
+    this._y = newY;
   }
 }
 
