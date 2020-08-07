@@ -1,0 +1,57 @@
+{
+  "projectName": "Test Project",
+  "discription": "This is just a test project to make sure this structure works.",
+  "contributors": [
+    {
+      "name": "Joseph Lanclos",
+      "startedContributing": "05/31/2020 @ 7:24PM",
+      "lastContribution": "05/31/2020 @ 7:26PM"
+    },
+    {
+      "name": "Justa Futabaw",
+      "startedContributing": "06/05/2020 @ 1:24PM",
+      "lastContribution": "06/08/2020 @ 3:23PM"
+    }
+  ],
+  "pid": {
+    "sheets": [
+      {
+        "sheetName": "Sheet 1",
+        "sheetDescription": "I'm just a regular sheet",
+        "content": [
+          {
+            "objectID": "000",
+            "group": "Group 1",
+            "properties": { "prop1": "prop 1 data", "prop2": "prop 2 data" },
+            "geometry": [
+              {
+                "ID": "000",
+                "primative": "rectangle",
+                "pattern": {
+                  "originX": 20,
+                  "originY": 30,
+                  "width": 100,
+                  "height": 50,
+                  "strokeColor": "#e5e5e5",
+                  "fillColor": "#e553e5"
+                }
+              },
+              {
+                "ID": "001",
+                "primative": "rectangle",
+                "pattern": {
+                  "originX": 100,
+                  "originY": 300,
+                  "width": 10,
+                  "height": 90,
+                  "strokeColor": "#45e5e5",
+                  "fillColor": "#e55378"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

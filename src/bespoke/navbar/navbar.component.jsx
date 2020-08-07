@@ -1,12 +1,7 @@
 import React, { Fragment } from "react";
 import { StyledBar } from "../../components/page/styled-bar/styled-bar.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBars,
-  faCog,
-  faSearch,
-  faQuestion,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCog, faSearch, faQuestion } from "@fortawesome/free-solid-svg-icons";
 
 export function Navbar() {
   const LeftGroup = () => (
@@ -16,7 +11,7 @@ export function Navbar() {
   );
   const CenterGroup = () => (
     <Fragment>
-      <p>Lemon</p>
+      <p>Javelin</p>
     </Fragment>
   );
   const RightGroup = () => (
@@ -27,11 +22,5 @@ export function Navbar() {
     </Fragment>
   );
 
-  return (
-    <StyledBar
-      leftGroup={<LeftGroup />}
-      centerGroup={<CenterGroup />}
-      rightGroup={<RightGroup />}
-    />
-  );
+  return <StyledBar leftGroup={<LeftGroup />} centerGroup={<CenterGroup />} rightGroup={<RightGroup />} />;
 }

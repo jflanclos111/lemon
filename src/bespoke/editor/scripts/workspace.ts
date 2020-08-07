@@ -2,6 +2,7 @@ import { Point } from "./point";
 import { getNewScale, getNewWorldPosition } from "./spatial-ops";
 import { Mouse } from "./mouse";
 import { Sheet } from "./sheet";
+import data from "./test.json";
 
 export class Workspace {
   constructor(
@@ -10,12 +11,11 @@ export class Workspace {
     readonly scaleDeltaCoarse: number = 0.05,
     readonly scaleMin: number = 0.01,
     readonly scaleMax: number = 2.0,
-    readonly mouseState: Mouse = new Mouse(ctx, true),
+    readonly mouseState: Mouse = new Mouse(ctx),
     readonly sheetState: Sheet = new Sheet(ctx),
     private _worldPosition: Point = new Point(0, 0),
     private _scale: number = 1
   ) {
-    this.configCanvas();
     this.createEvents();
     this.render();
   }
@@ -40,11 +40,8 @@ export class Workspace {
     if (newScale !== this._scale) this._scale = newScale;
   }
 
-  private configCanvas(): void {
-    this.ctx.imageSmoothingEnabled = true;
-  }
-
   private createEvents(): void {
+    console.log(data);
     this.canvas.addEventListener("wheel", this.handleMouseEvent.bind(this));
     this.canvas.addEventListener("mousemove", this.handleMouseEvent.bind(this));
     this.canvas.addEventListener("mousedown", this.handleMouseEvent.bind(this));
@@ -52,8 +49,8 @@ export class Workspace {
   }
 
   private clear(): void {
-    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.resetTransform();
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
 
   public render(): void {

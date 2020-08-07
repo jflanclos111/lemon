@@ -1,47 +1,89 @@
 export class Point {
+  /**
+   * A point on a cartesian coordinate plane
+   * @param _x the x coordinate
+   * @param _y the y coordinate
+   * @class
+   */
   constructor(private _x: number, private _y: number) {}
 
-  //returns the "x" coordinate of the point
   public get x(): number {
     return this._x;
   }
 
-  //returns the "y" coordinate of the point
   public get y(): number {
     return this._y;
   }
 
-  //sets the "x" coordinate of the point
   public set x(newX: number) {
     this._x = newX;
   }
 
-  //sets the "y" coordinate of the point
   public set y(newY: number) {
     this._y = newY;
   }
 }
 
-//takes two Points and returns the difference in their "x" coordinates
+/**
+ * Returns the difference in the x coordinate between point a and point b
+ * @param {Point} a point a
+ * @param {Point} b point b
+ * @returns {number} the difference between the x coordinate of point a and point b
+ * @example
+ * // demonstrates deltaX
+ * const somePointA = new Point(0,0);
+ * const somePointB = new Point (3,2);
+ * deltaX(somePointA, somePointB); // returns -3
+ */
 export function deltaX(a: Point, b: Point): number {
   const dx = a.x - b.x;
   return dx;
 }
 
-//takes two Points and returns the difference in their "y" coordinates
+/**
+ * Returns the difference in the y coordinate between point a and point b
+ * @param {Point} a point a
+ * @param {Point} b point b
+ * @returns {number} the difference between the y coordinate of point a and point b'
+ * @example
+ * // demonstrates deltaY
+ * const somePointA = new Point(0,0);
+ * const somePointB = new Point (3,2);
+ * deltaY(somePointA, somePointB); // returns -2
+ */
 export function deltaY(a: Point, b: Point): number {
   const dy = a.y - b.y;
   return dy;
 }
 
-//takes two Points and returns the magnitude distance between them
+/**
+ * Returns the magnitude of the distance between point a and point b
+ * @param {Point} a point a
+ * @param {Point} b point b
+ * @returns {number} magnitude of the distance between point a and point b
+ * @example
+ * // demonstrates distance
+ * const somePointA = new Point(0,0);
+ * const somePointB = new Point (3,2);
+ * distance(somePointA, somePointB); // returns 3.605551275
+ */
 export function distance(a: Point, b: Point): number {
   const dx = deltaX(a, b);
   const dy = deltaY(a, b);
   return Math.hypot(dx, dy);
 }
 
-//takes two Points and returns the angle in radians that they make measured counter-clockwise from the positive "x" cartesian axis
+/**
+ * Returns the angle in radians that a line between points a and b make measured countered-clockwise from the positive x cartesian axis
+ * @param {Point} a point a
+ * @param {Point} b point b
+ * @returns {number} angle in radians
+ * @example
+ * // demonstates angleRad
+ * const somePointA = new Point(0,0);
+ * const somePointB = new Point(3,2);
+ * angleRad(somePointA, somePointB); // returns 3.729595257
+ */
 export function angleRad(a: Point, b: Point): number {
   const dx = deltaX(a, b);
   const dy = deltaY(a, b);
@@ -50,56 +92,84 @@ export function angleRad(a: Point, b: Point): number {
   return dy >= 0 ? acos : 2 * Math.PI - acos;
 }
 
-//takes two Points and returns the angle in degrees that they make measured counter-clockwise from the positive "x" cartesian axis
+/**
+ * Returns the angle in degrees that a line between points a and b make measured countered-clockwise from the positive x cartesian axis
+ * @param {Point} a point a
+ * @param {Point} b point b
+ * @returns {number} angle in degrees
+ * @example
+ * // demonstates angleDeg
+ * const somePointA = new Point(0,0);
+ * const somePointB = new Point(3,2);
+ * angleDeg(somePointA, somePointB); // returns 213.6900675
+ */
 export function angleDeg(a: Point, b: Point): number {
   const radAng = angleRad(a, b);
   return radAng * (180 / Math.PI);
 }
 
-//takes two Points and returns the Point where a projection would meet if Point "b" was extended along the "x" axis and Point "a" was extended to meet the extension of Point "b"
-export function projectH(a: Point, b: Point): Point {
-  const projX = b.x + deltaX(a, b);
-  const projY = b.y;
-  return new Point(projX, projY);
-}
-
-//takes two Points and returns the Point where a projection would meet if Point "b" was extended along the "y" axis and Point "a" was extended to meet the extension of Point "b"
-export function projectV(a: Point, b: Point): Point {
-  const projX = b.x;
-  const projY = b.y + deltaY(a, b);
-  return new Point(projX, projY);
-}
-
-//returns the Point that exists along the shortest path from Point "b" to Point "a" at the proportion specified from 0 to 1.
+/**
+ * Returns the point that is at the proportion along the shortest line between point a and point b with all points between a and b existing at proportions 0 through 1.
+ * @param {Point} a point a
+ * @param {Point} b point b
+ * @param {number} proportion proportion of point between point a and b; points along continuous line between points a and b outside of the shortest distance line exist at proportions < 0 and > 1.
+ * @returns {Point} point at the proportion specified between points a and b
+ * @example
+ * // demonstrates proportionPoint
+ * const somePointA = new Point(0,0);
+ * const somePointB = new Point(3,2);
+ * proportionPoint(somePointA, somePointB, 0.75); // returns (2.25, 1.5)
+ */
 export function proportionPoint(a: Point, b: Point, proportion: number): Point {
-  const propDx = deltaX(a, b) * proportion;
-  const propDy = deltaY(a, b) * proportion;
+  const propDx = a.x + deltaX(b, a) * proportion;
+  const propDy = a.y + deltaY(b, a) * proportion;
   return new Point(propDx, propDy);
 }
 
-//returns the Point that exists at the midpoint of Point "a" and Point "b"
+/**
+ * Returns the point that is at the midpoint along the shortest line between point a and point b.
+ * @param {Point} a point a
+ * @param {Point} b point b
+ * @returns {Point} point at the midpoint between points a and b
+ * @example
+ * // demonstrates midPoint
+ * const somePointA = new Point(0,0);
+ * const somePointB = new Point(3,2);
+ * midPoint(somePointA, somePointB); // returns (1.5, 1)
+ */
 export function midPoint(a: Point, b: Point): Point {
   return proportionPoint(a, b, 0.5);
 }
 
-//returns the Point that is Point "a" offset on the x axis by "offsetX" and on the y axis by "offsetY"
-export function offsetPoint(a: Point, offsetX: number, offsetY: number): Point {
-  const newX = a.x + offsetX;
-  const newY = a.y + offsetY;
-  return new Point(newX, newY);
-}
-
-//returns a Point that is the result of multiplying the "x" and "y" coordinates of Point "a" by the specified "factor"
+/**
+ * Retuns the point that is the result of multiplying the x and y coordinates of point a by the specified factor.
+ * @param {Point} a point a
+ * @param {number} factor multiplication factor
+ * @returns {Point} point resulting of multiplying the x and y coordinates of point a by the factor
+ * @example
+ * // demonstrates multiplyPoint
+ * const somePointA = new Point(3, 2);
+ * multiplyPoint(somePointA, 2); // returns (6, 4)
+ */
 export function multiplyPoint(a: Point, factor: number): Point {
   const newX = a.x * factor;
   const newY = a.y * factor;
   return new Point(newX, newY);
 }
 
-//returns a Point that is the result of dividing the "x" and "y" coordinates of Point "a" by the specified "divisor"
+/**
+ * Retuns the point that is the result of dividing the x and y coordinates of point a by the specified divisor.
+ * @param {Point} a point a
+ * @param {number} divisor divisor; if the divisor is 0, it is coalesced such that it doesn not equal 0
+ * @returns {Point} point resulting of dividing the x and y coordinates of point a by the divisor
+ * @example
+ * // demonstrates dividePoint
+ * const somePointA = new Point(3, 2);
+ * dividePoint(somePointA, 2); // returns (1.5, 1)
+ */
 export function dividePoint(a: Point, divisor: number): Point {
-  if (divisor === 0) return new Point(Infinity, Infinity);
-  const newX = a.x / divisor;
-  const newY = a.y / divisor;
+  const divideBy = divisor === 0 ? divisor + Number.EPSILON : divisor;
+  const newX = a.x / divideBy;
+  const newY = a.y / divideBy;
   return new Point(newX, newY);
 }

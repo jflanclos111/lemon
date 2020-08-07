@@ -39,3 +39,17 @@ export function setPrecision(operand: number, decimalPlaces: number = 0): number
   const multiplier = Math.pow(10, adjDecimalPlaces);
   return Math.round(excitedValue * multiplier) / multiplier;
 }
+
+/**
+ * Determines if the argument is a valid hex color code.
+ * @param {any} item number to be modified
+ * @returns {Boolean} true if the item is a valid hex color code, false if it is not
+ * @example
+ * // demonstrates setting the precision of someValue
+ * const someItem = "4F2A35";
+ * isValidHexColor(someItem); // true
+ */
+export function isValidHexColor(item: string): Boolean {
+  const hexCharacters = /[0-9A-Fa-f]{6,}/;
+  return hexCharacters.test(item) && item.split("").length === 6 ? true : false;
+}
